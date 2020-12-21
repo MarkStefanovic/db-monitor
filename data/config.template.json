@@ -1,0 +1,19 @@
+{
+  "instructions": "rename this file to config.json",
+  "log_dir": "./log",
+  "reports_per_row": 4,
+  "datasources": [
+    {
+      "name": "localhost",
+      "uri": "dburi"
+    }
+  ],
+  "jobs": [
+    {
+      "report_name": "Customers",
+      "sql": "SELECT * FROM sales.customer",
+      "datasource_name": "localhost",
+      "seconds_between_refreshes": 60
+    }
+  ]
+}
