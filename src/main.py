@@ -2,7 +2,7 @@ import pathlib
 import sys
 import typing
 
-from PyQt5 import QtWidgets as qtw
+from PyQt5 import QtGui as qtg, QtWidgets as qtw
 from loguru import logger
 
 from src import adapter, presentation, service
@@ -24,6 +24,11 @@ def run(config_filepath: pathlib.Path) -> None:
     logger.info(f"Logging errors to {error_log_fp!s}.")
 
     app = qtw.QApplication(sys.argv)
+
+    default_font = qtg.QFont()
+    default_font.setPointSize(9)
+    default_font.setStyleHint(qtg.QFont.SansSerif)
+    app.setFont(default_font)
 
     ds_by_name = {ds.name: ds for ds in config.datasources}
     reports: typing.List[presentation.ReportView] = []

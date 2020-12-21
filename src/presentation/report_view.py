@@ -8,7 +8,9 @@ __all__ = ("ReportView",)
 
 
 class ReportView(qtw.QTableView):
-    def __init__(self, *, report_name: str, view_model: report_view_model.ReportViewModel):
+    def __init__(
+        self, *, report_name: str, view_model: report_view_model.ReportViewModel
+    ):
         super().__init__()
 
         self._report_name = report_name

@@ -3,7 +3,7 @@ from __future__ import annotations
 import typing
 
 import qdarkgraystyle
-from PyQt5 import QtCore as qtc, QtWidgets as qtw
+from PyQt5 import QtCore as qtc, QtGui as qtg, QtWidgets as qtw
 
 from src.presentation import report_view
 
@@ -35,10 +35,16 @@ class Dashboard(qtw.QDialog):
                 layout.addLayout(hbox, stretch=1)
 
             vbox = qtw.QVBoxLayout()
-            title = qtw.QLabel(report.report_name.upper())
+
+            title = qtw.QLabel(report.report_name)
+            title_font = qtg.QFont()
+            title_font.setWeight(qtg.QFont.Bold)
+            title.setFont(title_font)
+
             vbox.addWidget(title, alignment=qtc.Qt.AlignHCenter)
             vbox.addWidget(report)
             hbox.addLayout(vbox, stretch=1)  # noqa
+
             report.show()
 
         self.setLayout(layout)
