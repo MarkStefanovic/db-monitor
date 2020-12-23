@@ -11,7 +11,7 @@
   "jobs": [
     {
       "report_name": "Customers",
-      "sql": "SELECT * FROM sales.customer",
+      "sql_filepath": "X:/my_queries/etl_status.sql",
       "datasource_name": "localhost",
       "seconds_between_refreshes": 60
     }

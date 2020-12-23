@@ -25,10 +25,10 @@ class ReportViewModel(qtc.QAbstractTableModel):
     def data(self, index: qtc.QModelIndex, role: int = qtc.Qt.EditRole) -> typing.Any:
         if index.isValid() and role == qtc.Qt.DisplayRole:
             value = self._data[index.row()][index.column()]
-            if isinstance(value, datetime.date):
-                return value.strftime("%Y-%m-%d")
-            elif isinstance(value, datetime.datetime):
+            if isinstance(value, datetime.datetime):
                 return value.strftime("%Y-%m-%d %H:%M:%S")
+            elif isinstance(value, datetime.date):
+                return value.strftime("%Y-%m-%d")
             else:
                 return value
 

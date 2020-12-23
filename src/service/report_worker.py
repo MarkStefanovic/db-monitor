@@ -1,3 +1,4 @@
+import functools
 import traceback
 
 from PyQt5 import QtCore as qtc
@@ -22,9 +23,13 @@ class ReportWorker(qtc.QRunnable):
         self._job = job
         self._signals = signals
 
+    @functools.cached_property
+    def sql(self) -> str:
+        return adapter.sql_file.read(self._job.sql_filepath)
+
     def run(self):
         try:
-            report = adapter.db.fetch(ds=self._ds, sql=self._job.sql)
+            report = adapter.db.fetch(ds=self._ds, sql=self.sql)
             self._signals.result.emit(report)
         except Exception as e:
             traceback.print_exc()

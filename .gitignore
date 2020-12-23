@@ -147,3 +147,4 @@ scripts
 config.json
 log
 poetry.lock
+data/sql
