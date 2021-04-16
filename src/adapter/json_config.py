@@ -1,6 +1,4 @@
-import functools
 import json
-import pathlib
 import typing
 
 import pydantic

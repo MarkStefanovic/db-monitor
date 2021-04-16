@@ -9,7 +9,6 @@ __all__ = ("get_config_path", "get_icons_folder", "get_log_dir", "get_sql_folder
 @functools.lru_cache
 def get_root_dir() -> pathlib.Path:
     if getattr(sys, "frozen", False):
-        print(f"{pathlib.Path(os.path.dirname(sys.executable))=}")
         return pathlib.Path(os.path.dirname(sys.executable))
     else:
         return pathlib.Path(sys.argv[0]).parent.parent

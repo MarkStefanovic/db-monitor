@@ -1,0 +1,1 @@
+cd .. & poetry run python -m src.main

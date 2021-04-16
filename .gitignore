@@ -141,7 +141,6 @@ cython_debug/
 
 .idea
 *.sqlite
-scripts
 .log
 *scratch.py
 config.json

@@ -1,17 +1,17 @@
 {
   "instructions": "rename this file to config.json",
-  "reports_per_row": 4,
+  "reports_per_row": 1,
   "datasources": [
     {
-      "name": "localhost",
-      "uri": "dburi"
+      "name": "dw",
+      "uri": "DSN=dw"
     }
   ],
   "jobs": [
     {
-      "report_name": "Customers",
-      "sql_filepath": "X:/my_queries/etl_status.sql",
-      "datasource_name": "localhost",
+      "report_name": "User Request Log",
+      "sql_file": "req_log.sql",
+      "datasource_name": "dw",
       "seconds_between_refreshes": 60
     }
   ]
