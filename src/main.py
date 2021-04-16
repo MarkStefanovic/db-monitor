@@ -1,9 +1,8 @@
-import pathlib
 import sys
 import typing
 
-from PyQt5 import QtGui as qtg, QtWidgets as qtw
 from loguru import logger
+from PyQt5 import QtGui as qtg, QtWidgets as qtw
 
 from src import adapter, presentation, service
 
@@ -11,17 +10,9 @@ __all__ = ("run",)
 
 
 @logger.catch
-def run(config_filepath: pathlib.Path) -> None:
+def run() -> None:
     logger.info("Starting Db Monitor...")
-    config = adapter.load(config_filepath)
-    error_log_fp = config.log_dir / "error.log"
-    logger.add(
-        error_log_fp,
-        rotation="5 MB",
-        retention="7 days",
-        level="ERROR",
-    )
-    logger.info(f"Logging errors to {error_log_fp!s}.")
+    config = adapter.load(adapter.fs.get_config_path())
 
     app = qtw.QApplication(sys.argv)
 
@@ -38,15 +29,28 @@ def run(config_filepath: pathlib.Path) -> None:
         view_model = presentation.ReportViewModel(signals)
         report = presentation.ReportView(report_name=job.report_name, view_model=view_model)
         reports.append(report)
-        service.ReportScheduler(ds=ds, job=job, signals=signals, parent=report)
+        service.ReportScheduler(ds=ds, job=job, signals=signals, parent=report, sql_folder=adapter.fs.get_sql_folder())
 
     window = presentation.Dashboard(
-        reports=reports, reports_per_row=config.reports_per_row
+        reports=reports, reports_per_row=config.reports_per_row, app_icon_fp=adapter.fs.get_icons_folder() / "app.png",
     )
     window.showMaximized()
     sys.exit(app.exec())
 
 
 if __name__ == "__main__":
-    config_fp = pathlib.Path(sys.argv[0]).parent.parent / "data" / "config.json"
-    run(config_fp)
+    if getattr(sys, "frozen", False):
+        logger.add(sys.stderr, format="{time} {level} {message}", level="DEBUG")
+    logger.add(
+        adapter.fs.get_log_dir() / "info.log",
+        rotation="5 MB",
+        retention="7 days",
+        level="INFO",
+    )
+    logger.add(
+        adapter.fs.get_log_dir() / "error.log",
+        rotation="5 MB",
+        retention="7 days",
+        level="ERROR",
+    )
+    run()

@@ -20,7 +20,7 @@ class ReportView(qtw.QTableView):
         self.setSizeAdjustPolicy(qtw.QAbstractScrollArea.AdjustToContents)
         self.setModel(self._view_model)
 
-        self._view_model.modelReset.connect(self.resizeColumnsToContents)
+        self._view_model.modelReset.connect(self.resizeColumnsToContents)  # type: ignore
 
     @property
     def report_name(self) -> str:

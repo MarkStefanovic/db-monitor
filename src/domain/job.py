@@ -5,7 +5,7 @@ __all__ = ("Job",)
 
 class Job(pydantic.BaseModel):
     report_name: str
-    sql_filepath: pydantic.FilePath
+    sql_file: str
     datasource_name: str
     seconds_between_refreshes: pydantic.PositiveInt
 

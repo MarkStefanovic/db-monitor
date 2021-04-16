@@ -1,8 +1,10 @@
 import functools
+import pathlib
 import traceback
 
 from PyQt5 import QtCore as qtc
 
+import src.adapter.fs
 from src import domain, adapter
 from src.service import report_worker_signals
 
@@ -16,16 +18,19 @@ class ReportWorker(qtc.QRunnable):
         ds: domain.Datasource,
         job: domain.Job,
         signals: report_worker_signals.ReportWorkerSignals,
+        sql_folder: pathlib.Path,
     ):
         super().__init__()
 
         self._ds = ds
         self._job = job
         self._signals = signals
+        self._sql_folder = sql_folder
 
     @functools.cached_property
     def sql(self) -> str:
-        return adapter.sql_file.read(self._job.sql_filepath)
+        fp = self._sql_folder / self._job.sql_file
+        return src.adapter.fs.read_sql_file(fp)
 
     def run(self):
         try:

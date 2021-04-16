@@ -1,4 +1,6 @@
+import functools
 import json
+import pathlib
 import typing
 
 import pydantic
@@ -22,12 +24,3 @@ def save(config: domain.Config, filepath: pydantic.FilePath) -> None:
     json_data = config.json(indent=2)
     with open(filepath, "w") as fh:
         json.dump(json_data, fh)
-
-
-if __name__ == "__main__":
-    import pathlib
-    fp = pathlib.Path(
-        r"C:\Users\marks\Desktop\Backup\Programming\Python\projects\db-monitor\data\config.json"
-    )
-    cfg = load(fp)
-    print(cfg)

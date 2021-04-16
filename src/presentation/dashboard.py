@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import pathlib
 import typing
 
 import qdarkgraystyle
@@ -11,14 +12,20 @@ __all__ = ("Dashboard",)
 
 
 class Dashboard(qtw.QDialog):
-    def __init__(self, *, reports: typing.List[report_view.ReportView], reports_per_row: int):
+    def __init__(
+        self,
+        *,
+        reports: typing.List[report_view.ReportView],
+        reports_per_row: int,
+        app_icon_fp: pathlib.Path,
+    ):
         super().__init__()
 
         self._reports = reports
         self._reports_per_row = reports_per_row
 
         self.setWindowTitle("Db Monitor")
-        # self.setWindowIcon(qtg.QIcon("app.png"))
+        self.setWindowIcon(qtg.QIcon(str(app_icon_fp)))
         self.setGeometry(100, 100, 1200, 500)
         self.setStyleSheet(qdarkgraystyle.load_stylesheet())
         self.setWindowFlags(
