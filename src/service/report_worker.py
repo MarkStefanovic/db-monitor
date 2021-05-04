@@ -27,6 +27,8 @@ class ReportWorker(qtc.QRunnable):
         self._signals = signals
         self._sql_folder = sql_folder
 
+        self._signals.refresh_request.connect(self.run)
+
     @functools.cached_property
     def sql(self) -> str:
         fp = self._sql_folder / self._job.sql_file

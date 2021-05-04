@@ -36,6 +36,8 @@ class ReportScheduler(qtc.QObject):
         self._timer.timeout.connect(self.tick)
         self._timer.start(1000)
 
+        self._signals.refresh_request.connect(self.run)
+
     def tick(self):
         if self._last_start_time:
             seconds_since_last_refresh = int(
@@ -49,12 +51,15 @@ class ReportScheduler(qtc.QObject):
             run_report = True
 
         if run_report:
-            logger.debug(f"Running {self._job.report_name} report...")
-            worker = report_worker.ReportWorker(
-                ds=self._ds,
-                job=self._job,
-                signals=self._signals,
-                sql_folder=self._sql_folder,
-            )
-            self._thread_pool.start(worker)
-            self._last_start_time = datetime.datetime.now()
+            self.run()
+
+    def run(self) -> None:
+        logger.debug(f"Running {self._job.report_name} report...")
+        worker = report_worker.ReportWorker(
+            ds=self._ds,
+            job=self._job,
+            signals=self._signals,
+            sql_folder=self._sql_folder,
+        )
+        self._thread_pool.start(worker)
+        self._last_start_time = datetime.datetime.now()

@@ -9,3 +9,5 @@ class ReportWorkerSignals(qtc.QObject):
     error = qtc.pyqtSignal(tuple)
     running = qtc.pyqtSignal()
     result = qtc.pyqtSignal(object)
+
+    refresh_request = qtc.pyqtSignal()

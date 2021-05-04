@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import datetime
 import pathlib
 import typing
 
@@ -35,22 +36,21 @@ class Dashboard(qtw.QDialog):
             | qtc.Qt.WindowSystemMenuHint
         )
 
+        self._last_refresh_labels: typing.Dict[str, qtw.QLabel] = {}
+        self._refresh_buttons: typing.Dict[str, qtw.QPushButton] = {}
+
         layout = qtw.QVBoxLayout()
         for i, report in enumerate(reports):
             if i % reports_per_row == 0:
                 hbox = qtw.QHBoxLayout()
                 layout.addLayout(hbox, stretch=1)
 
-            vbox = qtw.QVBoxLayout()
+            bold_font = qtg.QFont()
+            bold_font.setWeight(qtg.QFont.Bold)
 
-            title = qtw.QLabel(report.report_name)
-            title_font = qtg.QFont()
-            title_font.setWeight(qtg.QFont.Bold)
-            title.setFont(title_font)
-
-            vbox.addWidget(title, alignment=qtc.Qt.AlignHCenter)
-            vbox.addWidget(report)
-            hbox.addLayout(vbox, stretch=1)  # noqa
+            main_layout = qtw.QVBoxLayout()
+            main_layout.addWidget(report)
+            hbox.addLayout(main_layout, stretch=1)  # noqa
 
             report.show()
 

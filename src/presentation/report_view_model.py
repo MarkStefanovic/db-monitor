@@ -9,6 +9,8 @@ __all__ = ("ReportViewModel",)
 
 
 class ReportViewModel(qtc.QAbstractTableModel):
+    last_refresh_updated = qtc.pyqtSignal(str)
+
     def __init__(self, /, signals: service.ReportWorkerSignals) -> None:
         super().__init__()
 
@@ -17,7 +19,7 @@ class ReportViewModel(qtc.QAbstractTableModel):
         self._header: typing.List[str] = []
         self._data: typing.List[typing.Any] = []
 
-        self._signals.result.connect(self.refresh)
+        self._signals.result.connect(self.reset)
 
     def columnCount(self, parent: qtc.QModelIndex = qtc.QModelIndex()) -> int:
         return len(self._header)
@@ -60,11 +62,16 @@ class ReportViewModel(qtc.QAbstractTableModel):
         self.endInsertRows()
         return True
 
-    def refresh(self, report: domain.Report) -> None:
+    def refresh(self) -> None:
+        self._signals.refresh_request.emit()
+
+    def reset(self, report: domain.Report) -> None:
         self.beginResetModel()
         self._header = report.header
         self._data = report.rows
         self.endResetModel()
+
+        self.last_refresh_updated.emit(datetime.datetime.now().strftime("%m/%d @ %H:%M:%S"))
 
     def removeRows(
         self, row: int, count: int, parent: qtc.QModelIndex = qtc.QModelIndex()
