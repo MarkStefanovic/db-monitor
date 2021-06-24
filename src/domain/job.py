@@ -8,6 +8,7 @@ class Job(pydantic.BaseModel):
     sql_file: str
     datasource_name: str
     seconds_between_refreshes: pydantic.PositiveInt
+    height: int
 
     class Config:
         anystr_strip_whitespace = True

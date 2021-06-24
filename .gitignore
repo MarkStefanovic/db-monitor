@@ -147,3 +147,5 @@ config.json
 log
 poetry.lock
 data/sql
+sql_archive
+assets

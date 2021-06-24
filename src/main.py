@@ -27,11 +27,11 @@ def run() -> None:
         signals = service.ReportWorkerSignals()
         ds = ds_by_name[job.datasource_name]
         view_model = presentation.ReportViewModel(signals)
-        report = presentation.ReportView(report_name=job.report_name, view_model=view_model)
+        report = presentation.ReportView(report_name=job.report_name, view_model=view_model, height=job.height)
         reports.append(report)
         service.ReportScheduler(ds=ds, job=job, signals=signals, parent=report, sql_folder=adapter.fs.get_sql_folder())
 
-    window = presentation.Dashboard(
+    window = presentation.MainView(
         reports=reports, reports_per_row=config.reports_per_row, app_icon_fp=adapter.fs.get_icons_folder() / "app.png",
     )
     window.showMaximized()
