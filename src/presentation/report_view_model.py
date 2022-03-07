@@ -10,6 +10,7 @@ __all__ = ("ReportViewModel",)
 
 
 class ReportViewModel(qtc.QAbstractTableModel):
+    error = qtc.pyqtSignal(str)
     last_refresh_updated = qtc.pyqtSignal(str)
 
     def __init__(self, /, signals: service.ReportWorkerSignals) -> None:
@@ -17,17 +18,18 @@ class ReportViewModel(qtc.QAbstractTableModel):
 
         self._signals = signals
 
-        self._header: typing.List[str] = []
-        self.__data: typing.List[typing.Any] = []
+        self._header: list[str] = []
+        self.__data: list[typing.Any] = []
         self._filter_text: str = ""
 
+        self._signals.error.connect(self._on_error)
         self._signals.result.connect(self.reset)
 
     def columnCount(self, parent: qtc.QModelIndex = qtc.QModelIndex()) -> int:
         return len(self._header)
 
     @property
-    def _data(self):
+    def _data(self) -> list[typing.Any]:
         if self._filter_text:
             return [
                 row
@@ -92,9 +94,7 @@ class ReportViewModel(qtc.QAbstractTableModel):
         self.__data = report.rows
         self.endResetModel()
 
-        self.last_refresh_updated.emit(
-            datetime.datetime.now().strftime("%m/%d @ %H:%M:%S")
-        )
+        self.last_refresh_updated.emit(datetime.datetime.now().strftime("%m/%d @ %H:%M:%S"))  # type: ignore
 
     def removeRows(
         self, row: int, count: int, parent: qtc.QModelIndex = qtc.QModelIndex()
@@ -113,7 +113,7 @@ class ReportViewModel(qtc.QAbstractTableModel):
     ) -> bool:
         if index.isValid() and role == qtc.Qt.EditRole:
             self.__data[index.row()][index.column()] = value
-            self.dataChanged.emit(index, index, [role])
+            self.dataChanged.emit(index, index, [role])  # type: ignore
             return True
         else:
             return False
@@ -122,7 +122,10 @@ class ReportViewModel(qtc.QAbstractTableModel):
         self, column: int, order: qtc.Qt.SortOrder = qtc.Qt.AscendingOrder
     ) -> None:
         self.layoutAboutToBeChanged.emit()  # type: ignore
-        self.__data.sort(key=lambda x: x[column])
+        self.__data.sort(key=lambda x: "" if x[column] is None else x[column])
         if order == qtc.Qt.DescendingOrder:
             self.__data.reverse()
         self.layoutChanged.emit()  # type: ignore
+
+    def _on_error(self, error_message: str):
+        self.error.emit(error_message)  # type: ignore

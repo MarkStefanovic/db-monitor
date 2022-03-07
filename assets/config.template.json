@@ -1,0 +1,26 @@
+{
+  "instructions": "rename this file to config.json",
+  "reports_per_row": 1,
+  "datasources": [
+    {
+      "name": "localhost",
+      "uri": "postgresql+psycopg2://test:mypassword@localhost/testdb"
+    }
+  ],
+  "jobs": [
+    {
+      "report_name": "KETL Job Results",
+      "sql_file": "./assets/sql/job_result.sql",
+      "datasource_name": "localhost",
+      "height": 200,
+      "seconds_between_refreshes": 60
+    },
+    {
+      "report_name": "KETL Job Statuses",
+      "sql_file": "./assets/sql/job_status.sql",
+      "datasource_name": "localhost",
+      "height": 200,
+      "seconds_between_refreshes": 60
+    }
+  ]
+}

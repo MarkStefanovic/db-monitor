@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-import datetime
-import pathlib
 import typing
 
-import qdarkgraystyle
-from PyQt5 import QtCore as qtc, QtGui as qtg, QtWidgets as qtw
+from PyQt5 import QtGui as qtg, QtWidgets as qtw
 
 from src.presentation import report_view
 

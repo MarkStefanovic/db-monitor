@@ -146,6 +146,5 @@ cython_debug/
 config.json
 log
 poetry.lock
-data/sql
 sql_archive
-assets
+NOTES.txt

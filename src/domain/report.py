@@ -1,15 +1,11 @@
+import dataclasses
 import typing
-
-import pydantic
 
 __all__ = ("Report",)
 
 
-class Report(pydantic.BaseModel):
+@dataclasses.dataclass(frozen=True)
+class Report:
     name: str
-    header: typing.List[str]
-    rows: typing.List[typing.List[typing.Any]]
-
-    class Config:
-        anystr_strip_whitespace = True
-        min_anystr_length = 1
+    header: list[str]
+    rows: list[tuple[typing.Any, ...]]

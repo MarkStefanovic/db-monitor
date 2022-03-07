@@ -1,0 +1,7 @@
+sqlalchemy
+pyqt
+loguru
+mypy
+psycopg2-binary
+pytest
+qtmodern

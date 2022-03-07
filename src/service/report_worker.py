@@ -1,11 +1,10 @@
 import functools
 import pathlib
-import traceback
 
 from PyQt5 import QtCore as qtc
 
 import src.adapter.fs
-from src import domain, adapter
+from src import adapter, domain
 from src.service import report_worker_signals
 
 __all__ = ("ReportWorker",)
@@ -34,12 +33,11 @@ class ReportWorker(qtc.QRunnable):
         fp = self._sql_folder / self._job.sql_file
         return src.adapter.fs.read_sql_file(fp)
 
-    def run(self):
+    def run(self) -> None:
         try:
             report = adapter.db.fetch(ds=self._ds, sql=self.sql)
             self._signals.result.emit(report)
         except Exception as e:
-            traceback.print_exc()
-            self._signals.error.emit((e, traceback.format_exc()))
+            self._signals.error.emit(f"An error occurred while refreshing {self._job.report_name}: {e!s}.")
         finally:
             self._signals.finished.emit()

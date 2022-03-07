@@ -8,8 +8,14 @@ __all__ = ("ReportView",)
 
 
 class ReportView(qtw.QWidget):
+    error = qtc.pyqtSignal(str)
+
     def __init__(
-        self, *, report_name: str, view_model: report_view_model.ReportViewModel, height: int
+        self,
+        *,
+        report_name: str,
+        view_model: report_view_model.ReportViewModel,
+        height: int,
     ):
         super().__init__()
 
@@ -39,12 +45,12 @@ class ReportView(qtw.QWidget):
         search_label.setMaximumWidth(60)
         self._search_box = qtw.QLineEdit()
         self._search_box.setMaximumWidth(200)
-        self._search_box.textChanged.connect(self._on_search_box_text_changed)
+        self._search_box.textChanged.connect(self._on_search_box_text_changed)  # type: ignore
 
         self._refresh_button = qtw.QPushButton("Refresh")
         self._refresh_button.setFont(bold_font)
         self._refresh_button.setMaximumWidth(80)
-        self._refresh_button.clicked.connect(self._on_refresh_button_clicked)
+        self._refresh_button.clicked.connect(self._on_refresh_button_clicked)  # type: ignore
 
         header = qtw.QHBoxLayout()
         header.addWidget(title)
@@ -62,7 +68,11 @@ class ReportView(qtw.QWidget):
 
         self._view_model.modelReset.connect(self._table_view.resizeColumnsToContents)  # type: ignore
 
+        self._view_model.error.connect(self._on_error)
         self._view_model.last_refresh_updated.connect(self._update_last_refresh_label)
+
+    def _on_error(self, error_message: str) -> None:
+        self.error.emit(error_message)  # type: ignore
 
     def _on_refresh_button_clicked(self) -> None:
         self._view_model.refresh()

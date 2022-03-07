@@ -15,6 +15,7 @@ class ReportScheduler(qtc.QObject):
     def __init__(
         self,
         *,
+        thread_pool: qtc.QThreadPool,
         ds: domain.Datasource,
         job: domain.Job,
         signals: report_worker_signals.ReportWorkerSignals,
@@ -30,15 +31,15 @@ class ReportScheduler(qtc.QObject):
 
         self._last_start_time: typing.Optional[datetime.datetime] = None
 
-        self._thread_pool = qtc.QThreadPool()
+        self._thread_pool = thread_pool
 
         self._timer = qtc.QTimer()
-        self._timer.timeout.connect(self.tick)
+        self._timer.timeout.connect(self.tick)  # type: ignore
         self._timer.start(1000)
 
         self._signals.refresh_request.connect(self.run)
 
-    def tick(self):
+    def tick(self) -> None:
         if self._last_start_time:
             seconds_since_last_refresh = int(
                 (datetime.datetime.now() - self._last_start_time).total_seconds()

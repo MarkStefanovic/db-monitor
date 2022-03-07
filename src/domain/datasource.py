@@ -1,14 +1,12 @@
-import abc
-
-import pydantic
+import dataclasses
 
 __all__ = ("Datasource",)
 
 
-class Datasource(pydantic.BaseModel, abc.ABC):
+@dataclasses.dataclass(frozen=True)
+class Datasource:
     name: str
     uri: str
 
-    class Config:
-        anystr_strip_whitespace = True
-        min_anystr_length = 1
+    def __str__(self) -> str:
+        return f"Datasource [ name: {self.name} ]"

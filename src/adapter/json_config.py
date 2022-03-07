@@ -1,24 +1,26 @@
 import json
+import pathlib
 import typing
-
-import pydantic
 
 from src import domain
 
-__all__ = ("load", "save")
+__all__ = ("load", "PyodbcConfig",)
 
 
 class PyodbcConfig(domain.Config):
     datasources: typing.List[domain.Datasource]
 
 
-@pydantic.validate_arguments
-def load(filepath: pydantic.FilePath) -> PyodbcConfig:
-    return PyodbcConfig.parse_file(filepath, content_type="json")
+def load(*, path: pathlib.Path) -> PyodbcConfig:
+    with path.open("r") as fh:
+        data = json.load(fh)
 
+        datasources = [domain.Datasource(**ds) for ds in data["datasources"]]
 
-@pydantic.validate_arguments
-def save(config: domain.Config, filepath: pydantic.FilePath) -> None:
-    json_data = config.json(indent=2)
-    with open(filepath, "w") as fh:
-        json.dump(json_data, fh)
+        jobs = [domain.Job(**ds) for ds in data["jobs"]]
+
+        return PyodbcConfig(
+            datasources=datasources,
+            jobs=jobs,
+            reports_per_row=data["reports_per_row"],
+        )

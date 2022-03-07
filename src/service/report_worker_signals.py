@@ -6,7 +6,7 @@ __all__ = ("ReportWorkerSignals",)
 
 class ReportWorkerSignals(qtc.QObject):
     finished = qtc.pyqtSignal()
-    error = qtc.pyqtSignal(tuple)
+    error = qtc.pyqtSignal(str)
     running = qtc.pyqtSignal()
     result = qtc.pyqtSignal(object)
 
