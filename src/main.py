@@ -1,4 +1,5 @@
 import sys
+import types
 import typing
 
 import qtmodern.styles
@@ -65,7 +66,11 @@ def main() -> None:
 if __name__ == "__main__":
     except_hook = sys.excepthook
 
-    def exception_hook(exctype, value, traceback) -> None:
+    def exception_hook(
+        exctype: typing.Type[BaseException],
+        value: BaseException,
+        traceback: types.TracebackType | None,
+    ) -> None:
         logger.exception(value)
         except_hook(exctype, value, traceback)
         sys.exit(1)

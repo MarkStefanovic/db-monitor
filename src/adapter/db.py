@@ -8,7 +8,7 @@ __all__ = ("fetch",)
 
 
 @functools.cache
-def create_engine(*, uri: str):
+def create_engine(*, uri: str) -> sa.engine.Engine:
     engine = sa.create_engine(uri)
     return engine
 

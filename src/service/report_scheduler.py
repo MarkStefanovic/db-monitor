@@ -34,7 +34,7 @@ class ReportScheduler(qtc.QObject):
         self._thread_pool = thread_pool
 
         self._timer = qtc.QTimer()
-        self._timer.timeout.connect(self.tick)  # type: ignore
+        self._timer.timeout.connect(self.tick)  # noqa
         self._timer.start(1000)
 
         self._signals.refresh_request.connect(self.run)

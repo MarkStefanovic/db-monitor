@@ -58,7 +58,7 @@ class ReportViewModel(qtc.QAbstractTableModel):
         self.endResetModel()
 
     def flags(self, index: qtc.QModelIndex) -> qtc.Qt.ItemFlags:
-        return super().flags(index) | qtc.Qt.ItemIsEditable  # type: ignore
+        return super().flags(index) | qtc.Qt.ItemIsEditable  # noqa
 
     @property
     def header(self) -> typing.List[str]:
@@ -94,7 +94,7 @@ class ReportViewModel(qtc.QAbstractTableModel):
         self.__data = report.rows
         self.endResetModel()
 
-        self.last_refresh_updated.emit(datetime.datetime.now().strftime("%m/%d @ %H:%M:%S"))  # type: ignore
+        self.last_refresh_updated.emit(datetime.datetime.now().strftime("%m/%d @ %H:%M:%S"))  # noqa
 
     def removeRows(
         self, row: int, count: int, parent: qtc.QModelIndex = qtc.QModelIndex()
@@ -113,7 +113,7 @@ class ReportViewModel(qtc.QAbstractTableModel):
     ) -> bool:
         if index.isValid() and role == qtc.Qt.EditRole:
             self.__data[index.row()][index.column()] = value
-            self.dataChanged.emit(index, index, [role])  # type: ignore
+            self.dataChanged.emit(index, index, [role])  # noqa
             return True
         else:
             return False
@@ -121,11 +121,11 @@ class ReportViewModel(qtc.QAbstractTableModel):
     def sort(
         self, column: int, order: qtc.Qt.SortOrder = qtc.Qt.AscendingOrder
     ) -> None:
-        self.layoutAboutToBeChanged.emit()  # type: ignore
+        self.layoutAboutToBeChanged.emit()  # noqa
         self.__data.sort(key=lambda x: "" if x[column] is None else x[column])
         if order == qtc.Qt.DescendingOrder:
             self.__data.reverse()
-        self.layoutChanged.emit()  # type: ignore
+        self.layoutChanged.emit()  # noqa
 
-    def _on_error(self, error_message: str):
-        self.error.emit(error_message)  # type: ignore
+    def _on_error(self, error_message: str) -> None:
+        self.error.emit(error_message)  # noqa
