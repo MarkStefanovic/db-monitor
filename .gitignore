@@ -147,3 +147,4 @@ log
 poetry.lock
 sql_archive
 NOTES.txt
+scripts

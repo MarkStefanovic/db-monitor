@@ -53,9 +53,7 @@ class ReportViewModel(qtc.QAbstractTableModel):
                 return value
 
     def filter_text(self, /, text: str) -> None:
-        self.beginResetModel()
         self._filter_text = text
-        self.endResetModel()
 
     def flags(self, index: qtc.QModelIndex) -> qtc.Qt.ItemFlags:
         return super().flags(index) | qtc.Qt.ItemIsEditable  # noqa
