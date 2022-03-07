@@ -2,8 +2,7 @@ import sys
 import types
 import typing
 
-import qtmodern.styles
-import qtmodern.windows
+import qdarkstyle
 from loguru import logger
 from PyQt5 import QtCore as qtc, QtGui as qtg, QtWidgets as qtw
 
@@ -55,10 +54,9 @@ def main() -> None:
         app_icon=app_icon,
     )
 
-    qtmodern.styles.dark(app)
+    app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api="pyqt5"))
 
-    mw = qtmodern.windows.ModernWindow(window)
-    mw.showMaximized()
+    window.showMaximized()
 
     sys.exit(app.exec())
 

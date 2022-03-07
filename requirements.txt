@@ -5,4 +5,4 @@ mypy
 psycopg2-binary
 pyinstaller
 pytest
-qtmodern
+qdarkstyle
