@@ -27,27 +27,17 @@ pyz = PYZ(
 exe = EXE(
     pyz,
     a.scripts,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
     [],
-    exclude_binaries=True,
     name='DbMonitor',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=False,
-    disable_windowed_traceback=False,
-    target_arch=None,
-    codesign_identity=None,
-    entitlements_file=None,
-)
-
-coll = COLLECT(
-    exe,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
-    strip=False,
-    upx=True,
     upx_exclude=[],
-    name='DbMonitor',
+    runtime_tmpdir=None,
+    console=False,
+    icon="assets/icons/app.ico"
 )
