@@ -1,5 +1,4 @@
 import datetime
-import pathlib
 
 from PyQt5 import QtCore as qtc, QtGui as qtg, QtWidgets as qtw
 
@@ -44,6 +43,8 @@ class MainView(qtw.QMainWindow):
 
         for report in reports:
             report.error.connect(self._on_error)
+
+        self.setAttribute(qtc.Qt.WA_DeleteOnClose)
 
     def _on_error(self, error_message: str) -> None:
         self.statusBar().showMessage(f"{datetime.datetime.now():%I:%M:%S %p} [ERROR] {error_message}")

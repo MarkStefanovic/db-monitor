@@ -1,5 +1,4 @@
 import functools
-import os
 import pathlib
 import sys
 
@@ -9,8 +8,9 @@ __all__ = ("get_config_path", "get_icons_folder", "get_log_dir", "get_sql_folder
 @functools.lru_cache
 def get_root_dir() -> pathlib.Path:
     if getattr(sys, "frozen", False):
-        return pathlib.Path(getattr(sys, '_MEIPASS', os.path.abspath(os.path.dirname(__file__))))
-        # return pathlib.Path(os.path.dirname(sys.executable))
+        path = pathlib.Path(getattr(sys, '_MEIPASS'))
+        assert path is not None
+        return path
     else:
         path = pathlib.Path(sys.argv[0]).parent.parent
         assert path.name == "db-monitor", f"Expected the parent folder to be named db-monitor, but the path was {path.resolve()!s}."
