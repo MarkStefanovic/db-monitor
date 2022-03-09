@@ -20,6 +20,8 @@ class ReportWorker(qtc.QRunnable):
     ):
         super().__init__()
 
+        self.setAutoDelete(False)
+
         self._ds = ds
         self._job = job
         self._signals = signals
