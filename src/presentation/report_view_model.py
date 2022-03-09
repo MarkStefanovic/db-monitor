@@ -13,17 +13,23 @@ class ReportViewModel(qtc.QAbstractTableModel):
     error = qtc.pyqtSignal(str)
     last_refresh_updated = qtc.pyqtSignal(str)
 
-    def __init__(self, /, signals: service.ReportWorkerSignals) -> None:
+    def __init__(
+        self,
+        *,
+        signals: service.ReportWorkerSignals,
+        report_worker: domain.Worker,
+    ) -> None:
         super().__init__()
 
         self._signals = signals
+        self._report_worker = report_worker
 
         self._header: list[str] = []
         self.__data: list[typing.Any] = []
         self._filter_text: str = ""
 
-        self._signals.error.connect(self._on_error)
-        self._signals.result.connect(self.reset)
+        self._signals.failed.connect(self._on_error)
+        self._signals.finished.connect(self.reset)
 
     def columnCount(self, parent: qtc.QModelIndex = qtc.QModelIndex()) -> int:
         return len(self._header)
@@ -84,7 +90,7 @@ class ReportViewModel(qtc.QAbstractTableModel):
         return True
 
     def refresh(self) -> None:
-        self._signals.refresh_request.emit()
+        self._report_worker.run()
 
     def reset(self, report: domain.Report) -> None:
         self.beginResetModel()

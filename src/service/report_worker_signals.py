@@ -1,13 +1,9 @@
 from PyQt5 import QtCore as qtc
 
-
 __all__ = ("ReportWorkerSignals",)
 
 
 class ReportWorkerSignals(qtc.QObject):
-    finished = qtc.pyqtSignal()
-    error = qtc.pyqtSignal(str)
-    running = qtc.pyqtSignal()
-    result = qtc.pyqtSignal(object)
-
-    refresh_request = qtc.pyqtSignal()
+    finished = qtc.pyqtSignal(object)
+    failed = qtc.pyqtSignal(str)
+    started = qtc.pyqtSignal()

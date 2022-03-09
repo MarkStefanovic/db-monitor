@@ -1,4 +1,3 @@
-import functools
 import pathlib
 
 from PyQt5 import QtCore as qtc
@@ -24,20 +23,16 @@ class ReportWorker(qtc.QRunnable):
         self._ds = ds
         self._job = job
         self._signals = signals
-        self._sql_folder = sql_folder
 
-        self._signals.refresh_request.connect(self.run)
+        fp: pathlib.Path = sql_folder / job.sql_file
+        if not fp.exists():
+            raise domain.exceptions.FileDoesNotExist(path=fp)
 
-    @functools.cached_property
-    def sql(self) -> str:
-        fp = self._sql_folder / self._job.sql_file
-        return src.adapter.fs.read_sql_file(fp)
+        self._sql = src.adapter.fs.read_sql_file(fp)
 
     def run(self) -> None:
         try:
-            report = adapter.db.fetch(ds=self._ds, sql=self.sql)
-            self._signals.result.emit(report)
+            report = adapter.db.fetch(ds=self._ds, sql=self._sql)
+            self._signals.finished.emit(report)
         except Exception as e:
-            self._signals.error.emit(f"An error occurred while refreshing {self._job.report_name}: {e!s}.")
-        finally:
-            self._signals.finished.emit()
+            self._signals.failed.emit(f"An error occurred while refreshing {self._job.report_name}: {e!s}.")

@@ -32,7 +32,16 @@ def main() -> None:
     for job in config.jobs:
         signals = service.ReportWorkerSignals()
         ds = ds_by_name[job.datasource_name]
-        view_model = presentation.ReportViewModel(signals)
+        report_worker = service.ReportWorker(
+            ds=ds,
+            job=job,
+            signals=signals,
+            sql_folder=adapter.fs.get_sql_folder(),
+        )
+        view_model = presentation.ReportViewModel(
+            signals=signals,
+            report_worker=report_worker,
+        )
         report = presentation.ReportView(
             report_name=job.report_name,
             view_model=view_model,
@@ -41,11 +50,9 @@ def main() -> None:
         reports.append(report)
         service.ReportScheduler(
             thread_pool=thread_pool,
-            ds=ds,
             job=job,
-            signals=signals,
+            report_worker=report_worker,
             parent=report,
-            sql_folder=adapter.fs.get_sql_folder(),
         )
 
     window = presentation.MainView(
