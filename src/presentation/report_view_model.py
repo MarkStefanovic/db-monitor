@@ -126,9 +126,24 @@ class ReportViewModel(qtc.QAbstractTableModel):
         self, column: int, order: qtc.Qt.SortOrder = qtc.Qt.AscendingOrder
     ) -> None:
         self.layoutAboutToBeChanged.emit()  # noqa
-        self.__data.sort(key=lambda x: "" if x[column] is None else x[column])
-        if order == qtc.Qt.DescendingOrder:
-            self.__data.reverse()
+
+        default_value = ""
+        data_type_converter = str
+        for row in self.__data:
+            if row[column] is not None:
+                if isinstance(row[column], (datetime.date, datetime.datetime)):
+                    default_value = datetime.datetime(1900, 1, 1)
+                    data_type_converter = lambda v: v  # noqa
+                elif isinstance(row[column], (float, int)):
+                    default_value = 0
+                    data_type_converter = lambda v: v  # noqa
+                break
+
+        self.__data.sort(
+            key=lambda r: default_value if r[column] is None else data_type_converter(r[column]),
+            reverse=order == qtc.Qt.DescendingOrder,
+        )
+
         self.layoutChanged.emit()  # noqa
 
     def _on_error(self, error_message: str) -> None:
